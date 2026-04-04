@@ -1,7 +1,7 @@
 import WebSocket from "ws";
 import { PriceData } from "../models/price";
-
-export const priceStore = new Map<string, PriceData>();
+import { broadcastPrice } from "../websocket/server";
+import { priceStore } from "../store/priceStore";
 
 const BINANCE_WS_URL =
   "wss://stream.binance.com:9443/stream?streams=btcusdt@ticker/ethusdt@ticker";
@@ -26,6 +26,8 @@ export const startBinanceStream = () => {
     };
 
     priceStore.set(symbol, priceData);
+
+    broadcastPrice(priceData);
 
     console.log(priceData);
   });
