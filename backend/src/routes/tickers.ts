@@ -1,6 +1,6 @@
 import { Router } from "express";
 import { priceStore } from "../store/priceStore";
-import { mockHistory } from "../data/mockHistory";
+import axios from "axios";
 
 const router = Router();
 
@@ -21,16 +21,30 @@ router.get("/:symbol", (req, res) => {
   res.json(data);
 });
 
-router.get("/:symbol/history", (req, res) => {
-  const symbol = req.params.symbol.toUpperCase();
-  const history = mockHistory[symbol];
+router.get("/:symbol/history", async (req, res) => {
+  const { symbol } = req.params;
 
-  if (!history) {
-    res.status(404).json({ error: `No history for ${symbol}` });
-    return;
+  try {
+    const response = await axios.get("https://api.binance.com/api/v3/klines", {
+      params: {
+        symbol,
+        interval: "15m",
+        limit: 30,
+      },
+    });
+
+    console.log("response");
+
+    const history = response.data.map((candle: any) => ({
+      price: parseFloat(candle[4]),
+      timestamp: candle[0],
+    }));
+
+    res.json({ symbol, history });
+  } catch (error) {
+    console.error("Error fetching Binance history:", error);
+    res.status(500).json({ message: "Failed to fetch history data" });
   }
-
-  res.json(history);
 });
 
 export default router;
