@@ -4,25 +4,52 @@ import { priceStore } from "../store/priceStore";
 
 export const wss = new WebSocketServer({ port: 4050 });
 
+const subscriptions = new Map<WebSocket, Set<string>>();
+
 wss.on("connection", (ws: WebSocket) => {
   console.log("Client connected");
-   priceStore.forEach((data) => {
-     ws.send(JSON.stringify(data));
-   });
+
+  subscriptions.set(ws, new Set(["BTCUSDT", "ETHUSDT", "SOLUSDT"]));
+
+  priceStore.forEach((data) => {
+    ws.send(JSON.stringify(data));
+  });
+
+  ws.on("message", (raw) => {
+    try {
+      const msg = JSON.parse(raw.toString());
+
+      if (msg.subscribe && Array.isArray(msg.subscribe)) {
+        const symbols = msg.subscribe.map((s: string) => s.toUpperCase());
+        subscriptions.set(ws, new Set(symbols));
+        console.log(`Client subscribed to: ${symbols.join(", ")}`);
+
+        symbols.forEach((symbol: string) => {
+          const data = priceStore.get(symbol);
+          if (data) ws.send(JSON.stringify(data));
+        });
+      }
+    } catch (err) {
+      console.error("Invalid message from client:", err);
+    }
+  });
 
   ws.on("close", () => {
+    subscriptions.delete(ws);
     console.log("Client disconnected");
   });
 });
 
-console.log("WebSocket server running");
-
 export const broadcastPrice = (data: PriceData) => {
-  console.log("Broadcast data", data); 
-
   wss.clients.forEach((client) => {
     if (client.readyState === WebSocket.OPEN) {
-      client.send(JSON.stringify(data));
+      const subs = subscriptions.get(client);
+
+      if (subs && subs.has(data.symbol)) {
+        client.send(JSON.stringify(data));
+      }
     }
   });
 };
+
+console.log("WebSocket server running on port 4050");

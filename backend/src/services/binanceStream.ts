@@ -4,7 +4,7 @@ import { broadcastPrice } from "../websocket/server";
 import { priceStore } from "../store/priceStore";
 
 const BINANCE_WS_URL =
-  "wss://stream.binance.com:9443/stream?streams=btcusdt@ticker/ethusdt@ticker";
+  "wss://stream.binance.com:9443/stream?streams=btcusdt@ticker/ethusdt@ticker/solusdt@ticker";
 
 export const startBinanceStream = () => {
   const ws = new WebSocket(BINANCE_WS_URL);

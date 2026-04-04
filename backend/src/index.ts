@@ -1,15 +1,20 @@
 import express from "express";
 import { startBinanceStream } from "./services/binanceStream";
+import "./websocket/server";
+import tickerRoutes from "./routes/tickers";
 
 const app = express();
 const PORT = 4000;
 
+app.use(express.json());
+app.use("/tickers", tickerRoutes);
+
 app.get("/", (req, res) => {
-  res.send("Backend Test");
+  res.send("Backend running");
 });
 
 startBinanceStream();
 
 app.listen(PORT, () => {
-  console.log(`Running server port ${PORT}`);
+  console.log(`REST API running on port ${PORT}`);
 });
