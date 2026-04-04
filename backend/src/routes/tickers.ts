@@ -37,7 +37,7 @@ router.get("/:symbol/history", async (req, res) => {
 
     const history = response.data.map((candle: any) => ({
       price: parseFloat(candle[4]),
-      timestamp: candle[0],
+      time: candle[0],
     }));
 
     res.json({ symbol, history });

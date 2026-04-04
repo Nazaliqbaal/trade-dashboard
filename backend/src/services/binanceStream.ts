@@ -22,7 +22,7 @@ export const startBinanceStream = () => {
     const priceData: PriceData = {
       symbol,
       price,
-      timestamp: Date.now(),
+      time: Date.now(),
     };
 
     priceStore.set(symbol, priceData);
