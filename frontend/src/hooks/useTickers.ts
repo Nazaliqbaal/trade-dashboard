@@ -1,17 +1,12 @@
 import { useQuery } from "@tanstack/react-query";
-import axios from "axios";
 import type { HistoryData, PriceData } from "../types/price";
-
-const API_URL = "http://localhost:4000";
+import { fetchTickerHistory, fetchTickers } from "../services/api";
 
 export const useTickers = () => {
   return useQuery<PriceData[]>({
     queryKey: ["tickers"],
-    queryFn: async () => {
-      const res = await axios.get(`${API_URL}/tickers`);
-      return res.data;
-    },
-    refetchInterval: 5000,
+    queryFn: fetchTickers,
+    refetchInterval: 2000,
   });
 };
 
@@ -19,10 +14,9 @@ export const useTickerHistory = (symbol: string) => {
   return useQuery<HistoryData[]>({
     queryKey: ["history", symbol],
     queryFn: async () => {
-      const res = await axios.get(`${API_URL}/tickers/${symbol}/history`);
-      return res.data;
+      const res = await fetchTickerHistory(symbol);
+      return res.history;
     },
     enabled: !!symbol,
   });
 };
-

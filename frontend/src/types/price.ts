@@ -1,10 +1,15 @@
 export interface PriceData {
   symbol: string;
   price: number;
-  timestamp: number;
+  time: number;
 }
 
 export interface HistoryData {
   price: number;
-  timestamp: number;
+  time: number;
+}
+
+export interface TickerHistoryResponse {
+  symbol: string;
+  history: HistoryData[];
 }

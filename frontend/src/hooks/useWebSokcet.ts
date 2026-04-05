@@ -17,10 +17,7 @@ export const useWebSocket = (symbols: string[]) => {
 
     ws.current.onmessage = (event) => {
       const data: PriceData = JSON.parse(event.data);
-      setPrices((prev) => ({
-        ...prev,
-        [data.symbol]: data,
-      }));
+      setPrices((prev) => ({ ...prev, [data.symbol]: data }));
     };
 
     ws.current.onclose = () => console.log("WS disconnected");

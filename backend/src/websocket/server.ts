@@ -9,7 +9,10 @@ const subscriptions = new Map<WebSocket, Set<string>>();
 wss.on("connection", (ws: WebSocket) => {
   console.log("Client connected");
 
-  subscriptions.set(ws, new Set(["BTCUSDT", "ETHUSDT", "SOLUSDT"]));
+  subscriptions.set(
+    ws,
+    new Set(["BTCUSDT", "ETHUSDT", "SOLUSDT", "BNBUSDT", "XRPUSDT", "ADAUSDT"]),
+  );
 
   priceStore.forEach((data) => {
     ws.send(JSON.stringify(data));
