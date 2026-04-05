@@ -7,6 +7,7 @@ export const useTickers = () => {
     queryKey: ["tickers"],
     queryFn: fetchTickers,
     refetchInterval: 2000,
+    staleTime: 1000,
   });
 };
 
@@ -18,5 +19,8 @@ export const useTickerHistory = (symbol: string) => {
       return res.history;
     },
     enabled: !!symbol,
+    staleTime: 5 * 60 * 1000,
+    gcTime: 10 * 60 * 1000,
+    refetchOnWindowFocus: false,
   });
 };
