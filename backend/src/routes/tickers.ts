@@ -32,7 +32,6 @@ router.get("/:symbol/history", async (req, res) => {
         limit: 30,
       },
     });
-
     console.log("response");
 
     const history = response.data.map((candle: any) => ({
