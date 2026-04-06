@@ -1,73 +1,74 @@
-# React + TypeScript + Vite
+# Frontend — Real-Time Trading Dashboard
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+React/TypeScript dashboard that displays live cryptocurrency prices and charts, using Binance WebSocket stream.
 
-Currently, two official plugins are available:
+## Structure
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+frontend/
+├── src/
+│   ├── components/
+│   │   ├── PriceChart.tsx    # Recharts line chart
+│   │   ├── TickerList.tsx    # Ticker tab bar
+│   │   └── Tabs.tsx          # Reusable tab component
+│   ├── hooks/
+│   │   ├── useWebSocket.ts   # WebSocket connection + live updates
+│   │   └── useTickers.ts     # React Query data fetching
+│   ├── services/
+│   │   └── api.ts            # Axios API service
+│   ├── types/
+│   │   └── price.ts          # Shared TypeScript types
+│   ├── App.tsx               # Root component
+│   ├── main.tsx              # Entry point + React Query provider
+│   └── index.css             # Tailwind CSS import
+├── Dockerfile
+├── .env
+└── package.json
 
-## React Compiler
-
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
-
-## Expanding the ESLint configuration
-
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
-
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
-
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+## Setup
+```bash
+npm install
+npm run dev
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+## Environment Variables
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+Create a `.env` file:
 
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+VITE_API_URL=http://localhost:4000
+VITE_WS_URL=ws://localhost:4050
+
+## Features
+
+### Live Price Updates
+- WebSocket connects to backend on mount
+- Sends `{ subscribe: [...symbols] }` to backend
+- Receives price updates in real time
+- Updates ticker tabs and chart simultaneously
+
+### Historical Chart
+- Fetches 15 candles of 15m data from backend on ticker select
+- Renders as Recharts line chart
+- Cached for 5 minutes per symbol via React Query
+
+### Caching Strategy
+- History cached with `staleTime: 5 minutes` — switching tickers reuses cache
+- Tickers refetch every 2 seconds as fallback
+- `refetchOnWindowFocus: false` for history to avoid unnecessary calls
+
+### WebSocket Management
+- Single connection shared across all tickers
+- Subscription updates without reconnecting
+
+### UI
+- Horizontal tab bar for ticker switching (drag to see tabs in smaller screens)
+- Responsive — tabs scroll on mobile, chart resizes
+- Loading and error states for all data
+- Dark theme with Tailwind CSS
+
+## Docker
+```bash
+# From root folder
+docker compose up --build
 ```
+
+Frontend served via nginx on port 3000.
