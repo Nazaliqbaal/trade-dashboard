@@ -1,4 +1,5 @@
 import type { PriceData } from "../types/price";
+import Tabs from "./Tabs";
 
 interface Props {
   tickers: PriceData[];
@@ -13,23 +14,16 @@ export default function TickerList({
   selected,
   onSelect,
 }: Props) {
-  return (
-    <div className="ticker-list">
-      {tickers.map((ticker) => {
-        const live = livePrices[ticker.symbol];
-        const price = live?.price ?? ticker.price;
+  const tabs = tickers.map((ticker) => {
+    const live = livePrices[ticker.symbol];
+    const price = live?.price ?? ticker.price;
 
-        return (
-          <div
-            key={ticker.symbol}
-            className={`ticker-item ${selected === ticker.symbol ? "active" : ""}`}
-            onClick={() => onSelect(ticker.symbol)}
-          >
-            <span className="ticker-symbol">{ticker.symbol}</span>
-            <span className="ticker-price">${price.toLocaleString()}</span>
-          </div>
-        );
-      })}
-    </div>
-  );
+    return {
+      key: ticker.symbol,
+      label: ticker.symbol,
+      sublabel: `$${price.toLocaleString()}`,
+    };
+  });
+
+  return <Tabs tabs={tabs} selected={selected} onSelect={onSelect} />;
 }
