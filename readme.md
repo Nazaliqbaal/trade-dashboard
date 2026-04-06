@@ -112,6 +112,7 @@ npm run dev
 - ✅ Swagger API documentation at `/api-docs`
 - ✅ Real Binance WebSocket stream instead of mock data
 - ✅ WebSocket subscription filtering per client
+- ✅ Add alerting for price thresholds
 - ✅ Docker containerization for both services
 - ✅ Client-side caching for historical data (5 min staleTime)
 - ✅ Auto-reconnect on WebSocket disconnect
