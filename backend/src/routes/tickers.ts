@@ -154,7 +154,7 @@ router.get("/:symbol/history", async (req, res) => {
       params: {
         symbol,
         interval: "15m",
-        limit: 10,
+        limit: 15,
       },
     });
 
