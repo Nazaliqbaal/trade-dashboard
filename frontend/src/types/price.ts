@@ -13,3 +13,11 @@ export interface TickerHistoryResponse {
   symbol: string;
   history: HistoryData[];
 }
+
+export interface Alert {
+  id: string;
+  symbol: string;
+  targetPrice: number;
+  condition: "above" | "below";
+  triggered: boolean;
+}

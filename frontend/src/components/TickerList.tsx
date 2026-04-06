@@ -21,7 +21,7 @@ export default function TickerList({
     return {
       key: ticker.symbol,
       label: ticker.symbol,
-      sublabel: `$${price.toLocaleString()}`,
+      sublabel: `$${price}`,
     };
   });
 

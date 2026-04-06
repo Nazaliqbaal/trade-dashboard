@@ -1,9 +1,12 @@
 import { useEffect, useRef, useState } from "react";
 import type { PriceData } from "../types/price";
 
-const WS_URL = "ws://localhost:4050";
+const WS_URL = import.meta.env.VITE_WS_URL || "ws://localhost:4050";
 
-export const useWebSocket = (symbols: string[]) => {
+export const useWebSocket = (
+  symbols: string[],
+  onPriceUpdate?: (symbol: string, price: number) => void,
+) => {
   const ws = useRef<WebSocket | null>(null);
   const [prices, setPrices] = useState<Record<string, PriceData>>({});
 
@@ -18,6 +21,9 @@ export const useWebSocket = (symbols: string[]) => {
     ws.current.onmessage = (event) => {
       const data: PriceData = JSON.parse(event.data);
       setPrices((prev) => ({ ...prev, [data.symbol]: data }));
+
+
+      onPriceUpdate?.(data.symbol, data.price);
     };
 
     ws.current.onclose = () => console.log("WS disconnected");
@@ -26,7 +32,7 @@ export const useWebSocket = (symbols: string[]) => {
     return () => {
       ws.current?.close();
     };
-  }, [symbols]);
+  }, []);
 
   return { prices };
 };
