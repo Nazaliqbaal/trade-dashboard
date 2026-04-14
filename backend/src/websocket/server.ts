@@ -11,7 +11,7 @@ wss.on("connection", (ws: WebSocket) => {
 
   subscriptions.set(
     ws,
-    new Set(["BTCUSDT", "ETHUSDT", "SOLUSDT", "BNBUSDT", "XRPUSDT", "ADAUSDT"]),
+    new Set(),
   );
 
   priceStore.forEach((data) => {
