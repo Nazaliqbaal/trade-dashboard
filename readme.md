@@ -6,6 +6,9 @@ This is a cryptocurrency trading dashboard built with Node.js/TypeScript backend
 
 Displays live cryptocurrency prices and interactive charts for BTC, ETH, SOL, BNB, XRP, and ADA. Prices are streamed in real-time via WebSocket and historical data is fetched from the Binance Klines REST API.
 
+<img width="1627" height="902" alt="image" src="https://github.com/user-attachments/assets/09781b4b-abd0-4d2e-90ff-977fb77c68cc" />
+
+
 ## Repository Structure
 
 trade-dashboard/
