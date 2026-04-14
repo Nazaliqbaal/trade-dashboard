@@ -35,15 +35,6 @@ npm install
 npm run dev
 ```
 
-## Environment Variables
-
-| Variable | Default | Description |
-|---|---|---|
-| `PORT` | `4000` | REST API port |
-| `WS_PORT` | `4050` | WebSocket server port |
-| `NODE_ENV` | `development` | Environment |
-| `BINANCE_WS_URL` | Binance stream URL | Binance WebSocket URL |
-
 ## API Endpoints
 
 ### REST API
